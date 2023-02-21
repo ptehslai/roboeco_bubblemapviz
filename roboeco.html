@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+#chartdiv {
+  width: 100%;
+  height: 1080px;
+  max-width: 100%;
+  cursor: grab
+}
+
+</style>
+
+</head>
+<body>
+  <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+  <script src="https://cdn.amcharts.com/lib/5/hierarchy.js"></script>
+  <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+
+<div id="chartdiv"></div>
+<script>
+/**
+ * ---------------------------------------
+ * This demo was created using amCharts 5.
+ *
+ * For more information visit:
+ * https://www.amcharts.com/
+ *
+ * Documentation is available at:
+ * https://www.amcharts.com/docs/v5/
+ * ---------------------------------------
+ */
+
+// Create root element
+// https://www.amcharts.com/docs/v5/getting-started/#Root_element
+var root = am5.Root.new("chartdiv");
+
+// Set themes
+// https://www.amcharts.com/docs/v5/concepts/themes/
+root.setThemes([am5themes_Animated.new(root)]);
+
+// Create wrapper container
+var container = root.container.children.push(
+  am5.Container.new(root, {
+    width: am5.percent(100),
+    height: am5.percent(100),
+    layout: root.horizontalLayout
+  })
+);
+
+// Create series
+// https://www.amcharts.com/docs/v5/charts/hierarchy/#Adding
+var series = container.children.push(
+  am5hierarchy.ForceDirected.new(root, {
+    singleBranchOnly: false,
+    downDepth: 1,
+    initialDepth: 2,
+    valueField: "value",
+    categoryField: "name",
+    childDataField: "children",
+    manyBodyStrength: -8,
+    centerStrength: 0.8
+  })
+);
+series.nodes.template.set("tooltipText", "");
+
+// Generate and set data
+// https://www.amcharts.com/docs/v5/charts/hierarchy/#Setting_data
+var maxLevels = 2;
+var maxNodes = 5;
+var maxValue = 100;
+
+var data = {
+  name: "Robotics Ecosystem",
+  value: 120,
+  children: [
+    {
+      name: "New Tech",
+      value: 90,
+      children: [
+        {
+          name: "mmwave",
+          value: 70
+        },
+        {
+          name: "Stereo \n camera",
+          value: 30
+        },
+        {
+          name: "iToF",
+          value: 50
+        },
+        {
+          name: "RTK GPS",
+          value: 80
+        },
+        {
+          name: "Hybrid \n MCUs",
+          value: 30
+        },
+        {
+          name: "HPD BLDC \n Motor",
+          value: 20
+        },
+        {
+          name: "Thread",
+          value: 10
+        },
+        {
+          name: "Augmented \n Reality",
+          value: 30
+        },
+        {
+          name: "Machine \n Learning",
+          value: 20
+        },
+        {
+          name: "BLE 5.x",
+          value: 10
+        },
+        {
+          name: "SLAM",
+          value: 20
+        }
+      ]
+    },
+    {
+      name: "Modular Frameworks",
+      value: 90,
+      children: [
+        {
+          name: "Modular \n FW \n Architecture",
+          value: 60
+        },
+        {
+          name: "Universal \n Tools \n Debug \n Protocol \n (UTDP)",
+          value: 60
+        },
+        {
+          name: "Robotics \n Operating \n System \n (ROS1 & ROS2)",
+          value: 60
+        }
+      ]
+    },
+    {
+      name: "User-facing Solutions",
+      value: 90,
+      children: [
+        {
+          name: "Virtual Zone \n System",
+          value: 80
+        },
+        {
+          name: "Mobile App \n for Robots",
+          value: 60
+        },
+        {
+          name: "Web App",
+          value: 40
+        },
+        {
+          name: "User \n Data \n Analytics",
+          value: 40
+        },
+        {
+          name: "Customer \n Relationship \n Management \n (CRM)",
+          value: 40
+        },
+        {
+          name: "Content \n Management \n Solution \n (CMS)",
+          value: 40
+        }
+      ]
+    },
+    {
+      name: "Agile Dev. Infra.",
+      value: 90,
+      children: [
+        {
+          name: "FW Debug \n & Online Testing \n System (FDOT)",
+          value: 80
+        },
+        {
+          name: "Sprint \n management \n tools",
+          value: 60
+        },
+        {
+          name: "Continuous \n Integration \n& Deployment \n (CI / CD)",
+          value: 50
+        },
+        {
+          name: "Testing Management \n Tools",
+          value: 50
+        },
+        {
+          name: "Testing Automation \n Tools",
+          value: 50
+        }
+      ]
+    }
+  ]
+};
+//generateLevel(data, "", 0);
+
+series.data.setAll([data]);
+series.set("selectedDataItem", series.dataItems[0]);
+
+function generateLevel(data, name, level) {
+  for (var i = 0; i < Math.ceil(maxNodes * Math.random()) + 1; i++) {
+    var nodeName = name + "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[i];
+    var child;
+    if (level < maxLevels) {
+      child = {
+        name: nodeName + level
+      };
+
+      if (level > 0 && Math.random() < 0.5) {
+        child.value = Math.round(Math.random() * maxValue);
+      } else {
+        child.children = [];
+        generateLevel(child, nodeName + i, level + 1);
+      }
+    } else {
+      child = {
+        name: name + i,
+        value: Math.round(Math.random() * maxValue)
+      };
+    }
+    data.children.push(child);
+  }
+
+  level++;
+  return data;
+}
+
+// Make stuff animate on load
+series.appear(1000, 100);
+</script>
+
+</body>
+</html>
