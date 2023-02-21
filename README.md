@@ -7,5 +7,5 @@ bubblemap viz for robotics ecosystem
 
 ## Use below to run the html
 
-https://htmlpreview.github.io/?https://github.com/ptehslai/roboeco_bubblemapviz/roboeco.html
+https://htmlpreview.github.io/?https://github.com/ptehslai/roboeco_bubblemapviz/blob/main/roboeco.html
 
